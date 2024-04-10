@@ -181,9 +181,19 @@ function retry(func, attempts) {
  */
 function logger(func, logFunc) {
   return (...args) => {
-    logFunc(`${func.name}(${[...args]}) starts`);
-    const fn = func(`${args}`);
-    logFunc(`${func.name}(${[...args]}) ends`);
+    if (args[1] !== undefined) {
+      logFunc(`${func.name}(${JSON.stringify(args[0])},${args[1]}) starts`);
+    } else {
+      logFunc(`${func.name}(${JSON.stringify(args[0])}) starts`);
+    }
+
+    const fn = func(...args);
+
+    if (args[1] !== undefined) {
+      logFunc(`${func.name}(${JSON.stringify(args[0])},${args[1]}) ends`);
+    } else {
+      logFunc(`${func.name}(${JSON.stringify(args[0])}) ends`);
+    }
     return fn;
   };
 }
